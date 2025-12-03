@@ -2,6 +2,9 @@
 
 This repository implements the retrieval component of a simple RAG system, following the requirements in the SoluGenAI Junior AI Engineer Course home assignment PDF (`SoluGenAI _ Junior AI Engineer Course _ Home Assignment.pdf`).
 
+To view the original database, please download it from the following link: https://www.kaggle.com/datasets/rmisra/news-category-dataset?resource=download
+I didn't upload it here because even when archived its 27MB and GitHub allows only 25MB file size max.
+
 The system:
 - Ingests a small news dataset derived from a Kaggle JSONL file.
 - Builds OpenAI embeddings and stores them in a Chroma vector database.
