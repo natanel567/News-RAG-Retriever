@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>News RAG Retriever</title>
+    <style>
+      body {
+        font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI",
+          sans-serif;
+        margin: 0;
+        padding: 0;
+        background-color: #f5f5f5;
+      }
+
+      .container {
+        max-width: 900px;
+        margin: 40px auto;
+        padding: 24px;
+        background-color: #ffffff;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+        border-radius: 8px;
+      }
+
+      h1 {
+        margin-top: 0;
+        font-size: 24px;
+      }
+
+      form {
+        display: flex;
+        gap: 8px;
+        margin-bottom: 16px;
+      }
+
+      input[type="text"] {
+        flex: 1;
+        padding: 8px 10px;
+        border-radius: 4px;
+        border: 1px solid #ccc;
+        font-size: 14px;
+      }
+
+      button {
+        padding: 8px 16px;
+        border-radius: 4px;
+        border: none;
+        background-color: #2563eb;
+        color: #ffffff;
+        font-size: 14px;
+        cursor: pointer;
+      }
+
+      button:hover {
+        background-color: #1d4ed8;
+      }
+
+      .message {
+        margin-bottom: 16px;
+        color: #374151;
+        font-size: 14px;
+      }
+
+      .result {
+        border-top: 1px solid #e5e7eb;
+        padding-top: 12px;
+        margin-top: 12px;
+      }
+
+      .result-header {
+        display: flex;
+        justify-content: space-between;
+        font-size: 13px;
+        color: #6b7280;
+      }
+
+      .result-score {
+        font-weight: 600;
+      }
+
+      .result-text {
+        margin-top: 6px;
+        font-size: 14px;
+        line-height: 1.5;
+        color: #111827;
+      }
+
+      .result-meta {
+        margin-top: 4px;
+        font-size: 12px;
+        color: #6b7280;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <h1>News RAG Retriever</h1>
+      <p style="font-size: 13px; color: #6b7280;">
+        This demo retrieves relevant news snippets from a small dataset using
+        OpenAI embeddings and a Chroma vector database (no LLM generation).
+      </p>
+
+      <form method="post" action="/search">
+        <input
+          type="text"
+          name="query"
+          placeholder="Type your question or a keyword (e.g. 'travel hotels', 'politics guns')"
+          value="{{ query_text }}"
+          autofocus
+        />
+        <button type="submit">Search</button>
+      </form>
+
+      {% if message %}
+      <div class="message">
+        {{ message }}
+      </div>
+      {% endif %}
+
+      {% if results %}
+      <div>
+        {% for rank, chunk in results %}
+        <div class="result">
+          <div class="result-header">
+            <div>
+              <span class="result-score">#{{ rank }}</span>
+              &middot;
+              <span>Similarity score: {{ "%.3f"|format(chunk.score) }}</span>
+            </div>
+            <div>
+              Category: {{ chunk.category }} &middot; Date: {{ chunk.date }}
+            </div>
+          </div>
+          <div class="result-text">
+            {{ chunk.text }}
+          </div>
+          <div class="result-meta">
+            Source:
+            <a href="{{ chunk.link }}" target="_blank" rel="noopener noreferrer">
+              {{ chunk.link }}
+            </a>
+          </div>
+        </div>
+        {% endfor %}
+      </div>
+      {% endif %}
+    </div>
+  </body>
+  </html>
+
+
