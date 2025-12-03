@@ -1,8 +1,11 @@
 ## SoluGenAI Home Assignment – News RAG Retriever
 
-This repository implements the retrieval component of a simple RAG system, following the requirements in the SoluGenAI Junior AI Engineer Course home assignment PDF (`SoluGenAI _ Junior AI Engineer Course _ Home Assignment.pdf`).
+This repository implements the retrieval component of a simple RAG system, following the requirements in the home assignment.
 
 To view the original database, please download it from the following link: https://www.kaggle.com/datasets/rmisra/news-category-dataset?resource=download
+
+If for any reason the link doesn't work, I used the database called "News Category Dataset" from Kaggle
+
 I didn't upload it here because even when archived its 27MB and GitHub allows only 25MB file size max.
 
 After downloading, make sure to unzip the file in the data repository using the jsonl_conversion_to_table.py file
@@ -18,7 +21,7 @@ The system:
   - `News_Category_Dataset_v3.json` – original HuffPost news JSONL dataset.
   - `jsonl_conversion_to_table.py` – script to:
     - Load the JSONL file.
-    - Build a small, assignment-compliant subset (`≤200` rows, `<30,000` characters).
+    - Build a small  subset (`≤200` rows, `<30,000` characters).
     - Create `news_rag_table.csv` with columns: `text`, `category`, `date`, `link`.
   - `news_rag_table.csv` – final tabular dataset used for embeddings and retrieval.
 
@@ -52,18 +55,12 @@ Use Python 3.9+ (the system was developed and tested with Python 3.9).
 
 From the repository root:
 
-```bash
-cd /Users/netanel/solugen.ai_home_assignment  # or the cloned repo root on your machine
-python3 -m venv .venv
-source .venv/bin/activate  # On Windows: .venv\Scripts\activate
-pip install --upgrade pip
-pip install -r requirements.txt  # if provided, otherwise see minimal deps below
-```
 
-If there is no `requirements.txt`, install the minimal dependencies:
+
+Install the minimal dependencies:
 
 ```bash
-pip install pandas chromadb openai flask
+pip3 install pandas chromadb openai flask
 ```
 
 #### 2.2. OpenAI API key
@@ -74,15 +71,11 @@ Set the `OPENAI_API_KEY` environment variable before running any scripts that ca
 export OPENAI_API_KEY="sk-your-key-here"
 ```
 
-You can verify it is set:
-
-```bash
-echo $OPENAI_API_KEY
-```
-
 ### 3. Data Preparation Pipeline
 
 1. **Convert JSONL to CSV subset**
+
+  **If you want to do this step, make sure you downloaded the database from the link above.**
 
    ```bash
    cd project
@@ -92,9 +85,10 @@ echo $OPENAI_API_KEY
    This creates/overwrites `project/data/news_rag_table.csv` with:
    - Exactly one row per news article.
    - A `text` field: `"<headline>. <short_description> [Category: <category>, Date: <date>]"`.
-   - Total text length under 30,000 characters (assignment requirement).
+   - Total text length under 30,000 characters.
+   - 131 rows in the table.
 
-2. **Build the Chroma vector store**
+3. **Build the Chroma vector store**
 
    ```bash
    cd project
@@ -109,7 +103,6 @@ echo $OPENAI_API_KEY
    - Delete `project/vector_store/chroma_db/`.
    - Re-run `build_chroma_store.py`.
 
-> Note: You must have sufficient OpenAI embedding quota; otherwise the script will raise an `insufficient_quota` error from the OpenAI API.
 
 ### 4. Running the Minimal UI
 
@@ -127,7 +120,7 @@ echo $OPENAI_API_KEY
 
 4. Interact with the UI:
 
-   - Enter a query (word or phrase) in the text box and click **Search**.
+   - Enter a query (word or phrase) in the text box and click **Search** or press Enter.
    - The page displays:
      - A status message (e.g. “Exploring around keyword 'travel'…”, or “Showing the most relevant articles…”).
      - A list of retrieved results, each with:
